@@ -1,6 +1,8 @@
 #ifndef Move_h
 #define Move_h
-#include<memory>
+
+#include <memory>
+
 using namespace std;
 
 struct Move {
@@ -18,4 +20,5 @@ struct MoveNode {
 	MoveNode(Move move);
 	MoveNode(Move move, shared_ptr<MoveNode> const& parent);
 };
+
 #endif

@@ -4,6 +4,7 @@ void Card::Clear() {
 	Rank = EMPTY;
 	Suit = NONE;
 }
+
 void Card::Set(unsigned char value) {
 	Value = value;
 	Rank = (value % 13) + 1;

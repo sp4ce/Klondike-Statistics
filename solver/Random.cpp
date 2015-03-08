@@ -1,4 +1,5 @@
-#include"Random.h"
+#include "Random.h"
+
 //fast and simple random number generator I put together
 //randomness tested very well at http://www.cacert.at/random/
 void Random::CalculateNext() {
@@ -9,12 +10,15 @@ void Random::CalculateNext() {
 	twist ^= value ^ y;
 	value ^= (twist << 7) ^ (mix >> 16) ^ (y << 8);
 }
+
 Random::Random() {
 	SetSeed(101);
 }
+
 Random::Random(int seed) {
 	SetSeed(seed);
 }
+
 void Random::SetSeed(int seed) {
 	this->seed = seed;
 	mix = 51651237;
@@ -32,10 +36,12 @@ void Random::SetSeed(int seed) {
 		CalculateNext();
 	}
 }
+
 int Random::Next1() {
 	CalculateNext();
 	return value & 0x7fffffff;
 }
+
 int Random::Next2() {
 	if (seed == 0) { seed = 0x12345987; }
 	int k = seed / 127773;

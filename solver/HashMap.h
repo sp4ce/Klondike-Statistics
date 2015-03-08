@@ -1,5 +1,6 @@
 #ifndef HashMap_h
 #define HashMap_h
+
 using namespace std;
 
 #define KEYSIZE 21
@@ -48,12 +49,14 @@ template <typename T> struct KeyValue {
 template <typename T> KeyValue<T>::KeyValue() {
 	Next = NULL;
 }
+
 template <typename T> KeyValue<T>::KeyValue(int hash, HashKey const& key, T const& value, KeyValue<T> * next) {
 	Next = next;
 	Key = key;
 	Hash = hash;
 	Value = value;
 }
+
 template <typename T> KeyValue<T>::~KeyValue() {
 	delete Next;
 }
@@ -83,21 +86,27 @@ template <typename T> HashMap<T>::HashMap(int powerOf2) {
 	capacity = (1 << powerOf2) - 1;
 	table = new KeyValue<T>[capacity + 1];
 }
+
 template <typename T> HashMap<T>::~HashMap() {
 	delete[] table;
 }
+
 template <typename T> int HashMap<T>::Size() {
 	return size;
 }
+
 template <typename T> int HashMap<T>::MaxLength() {
 	return maxLength;
 }
+
 template <typename T> int HashMap<T>::SlotsUsed() {
 	return slotsUsed;
 }
+
 template <typename T> int HashMap<T>::Capacity() {
 	return capacity + 1;
 }
+
 template <typename T> KeyValue<T> * HashMap<T>::Add(HashKey const& key, T const& value) {
 	int hash = key.ComputeHash();
 	int i = hash;
@@ -125,6 +134,7 @@ template <typename T> KeyValue<T> * HashMap<T>::Add(HashKey const& key, T const&
 	if (length == 1) { slotsUsed++; }
 	return NULL;
 }
+
 template <typename T> void HashMap<T>::Clear() {
 	KeyValue<T> * old = table;
 	delete[] old;
@@ -133,4 +143,5 @@ template <typename T> void HashMap<T>::Clear() {
 	slotsUsed = 0;
 	maxLength = 0;
 }
+
 #endif

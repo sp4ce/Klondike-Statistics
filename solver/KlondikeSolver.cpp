@@ -1,8 +1,10 @@
-#include<strings.h>
-#include<iostream>
-#include<fstream>
-#include<ctime>
-#include"Solitaire.h"
+#include <strings.h>
+#include <iostream>
+#include <fstream>
+#include <ctime>
+
+#include "Solitaire.h"
+
 using namespace std;
 
 bool LoadGame(string const& f, Solitaire & s, unsigned int & index) {
@@ -96,7 +98,7 @@ int main(int argc, char * argv[]) {
 			cout << "  /MULTI # [/M #]       Uses # threads to solve deals.\n";
 			cout << "                        Only works when solving minimally.\n\n";
 			cout << "  /OUT # [/O #]         Sets the output method of the solver.\n";
-			cout << "                        Defaults to 0, 1 for Pysol, and 2 for minimal output.\n";
+			cout << "                        Defaults to 0, 1 for Pysol, and 2 for minimal output.\n\n";
 			cout << "  /MOVES [/MVS]         Will also output a compact list of moves made when a\n";
 			cout << "                        solution is found.\n\n";
 			cout << "  /STATES # [/S #]      Sets the maximum number of game states to evaluate\n";

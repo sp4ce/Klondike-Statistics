@@ -1,5 +1,6 @@
 #ifndef Card_h
 #define Card_h
+
 enum Cards {
 	EMPTY = 0,
 	ACE,
@@ -30,4 +31,5 @@ struct Card {
 	void Clear();
 	void Set(unsigned char value);
 };
+
 #endif

@@ -1,14 +1,17 @@
 #ifndef Solitaire_h
 #define Solitaire_h
-#include<string>
-#include<stack>
-#include<memory>
-#include<mutex>
-#include"Random.h"
-#include"Move.h"
-#include"Card.h"
-#include"Pile.h"
-#include"HashMap.h"
+
+#include <string>
+#include <stack>
+#include <memory>
+#include <mutex>
+
+#include "Random.h"
+#include "Move.h"
+#include "Card.h"
+#include "Pile.h"
+#include "HashMap.h"
+
 using namespace std;
 
 enum SolveResult {
@@ -29,6 +32,7 @@ private:
 
 	int FoundationMin();
 	int GetTalonCards(Card talon[], int talonMoves[]);
+
 public:
 	void Initialize();
 	int Shuffle1(int dealNumber = -1);
@@ -78,9 +82,11 @@ private:
 
 	void RunMinimalWorker(void * closed);
 	void RunFastWorker();
+
 public:
 	SolitaireWorker(Solitaire & solitaire, int maxClosedCount);
 
 	SolveResult Run(int numThreads);
 };
+
 #endif

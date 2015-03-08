@@ -1,8 +1,10 @@
-#include<sstream>
-#include<thread>
-#include<memory>
-#include<iostream>
-#include"Solitaire.h"
+#include <sstream>
+#include <thread>
+#include <memory>
+#include <iostream>
+
+#include "Solitaire.h"
+
 using namespace std;
 
 const char PILES[] = { "W1234567GCDSH" };
@@ -117,6 +119,7 @@ void SolitaireWorker::RunMinimalWorker(void * closedPointer) {
 		}
 	}
 }
+
 SolveResult SolitaireWorker::Run(int numThreads) {
 	solitaire->MakeAutoMoves();
 	if (solitaire->MovesAvailableCount() == 0) { return solitaire->FoundationCount() == 52 ? SolvedMinimal : Impossible; }
@@ -238,6 +241,7 @@ SolveResult Solitaire::SolveRandom(int numberOfTimesToPlay, int solutionsToFind)
 	}
 	return foundationCount == 52 ? SolvedMayNotBeMinimal : CouldNotComplete;
 }
+
 SolveResult Solitaire::SolveFast(int maxClosedCount, int twoShift, int threeShift) {
 	MakeAutoMoves();
 	if (movesAvailableCount == 0) { return foundationCount == 52 ? SolvedMinimal : Impossible; }
@@ -427,15 +431,15 @@ SolveResult Solitaire::SolveFast(int maxClosedCount, int twoShift, int threeShif
 	}
 	return maxFoundationCount == 52 ? SolvedMayNotBeMinimal : CouldNotComplete;
 }
+
 SolveResult Solitaire::SolveMinimalMultithreaded(int numThreads, int maxClosedCount) {
 	SolitaireWorker worker(*this, maxClosedCount);
 	return worker.Run(numThreads);
 }
+
 SolveResult Solitaire::SolveMinimal(int maxClosedCount) {
 	MakeAutoMoves();
 	if (movesAvailableCount == 0) { return foundationCount == 52 ? SolvedMinimal : Impossible; }
-
-
 
 	int openCount = 1;
 	int maxFoundationCount = foundationCount;
@@ -553,6 +557,7 @@ SolveResult Solitaire::SolveMinimal(int maxClosedCount) {
 	}
 	return closed.Size() >= maxClosedCount ? (maxFoundationCount == 52 ? SolvedMayNotBeMinimal : CouldNotComplete) : (maxFoundationCount == 52 ? SolvedMinimal : Impossible);
 }
+
 int Solitaire::GetTalonCards(Card talon[], int talonMoves[]) {
 	int index = 0;
 
@@ -600,6 +605,7 @@ int Solitaire::GetTalonCards(Card talon[], int talonMoves[]) {
 
 	return index;
 }
+
 void Solitaire::UpdateAvailableMoves() {
 	movesAvailableCount = 0;
 	int foundationMin = FoundationMin();
@@ -742,9 +748,11 @@ void Solitaire::UpdateAvailableMoves() {
 		}
 	}
 }
+
 void Solitaire::ResetGame() {
 	ResetGame(drawCount);
 }
+
 void Solitaire::ResetGame(int drawCount) {
 	this->drawCount = drawCount;
 	roundCount = 0;
@@ -767,6 +775,7 @@ void Solitaire::ResetGame(int drawCount) {
 		piles[STOCK].AddUp(cards[i]);
 	}
 }
+
 int Solitaire::Shuffle1(int dealNumber) {
 	if (dealNumber != -1) {
 		random.SetSeed(dealNumber);
@@ -787,6 +796,7 @@ int Solitaire::Shuffle1(int dealNumber) {
 
 	return dealNumber;
 }
+
 void Solitaire::Shuffle2(int dealNumber) {
 	for (int i = 0; i < 26; i++) { cards[i].Set(i); }
 	for (int i = 39; i < 52; i++) { cards[i].Set(i - 13); }
@@ -808,6 +818,7 @@ void Solitaire::Shuffle2(int dealNumber) {
 		cards[i] = temp;
 	}
 }
+
 int Solitaire::MinimumMovesLeft() {
 	Pile & waste = piles[WASTE];
 	int wasteSize = waste.Size();
@@ -877,6 +888,7 @@ int Solitaire::MinimumMovesLeft() {
 	// cout << "Min moves left: " << win << endl;
 	return win;
 }
+
 void Solitaire::Initialize() {
 	drawCount = 1;
 	for (int i = 0; i < 52; i++) {
@@ -886,6 +898,7 @@ void Solitaire::Initialize() {
 		piles[i].Initialize();
 	}
 }
+
 void Solitaire::MakeAutoMoves() {
 	UpdateAvailableMoves();
 	while (movesAvailableCount == 1) {
@@ -893,9 +906,11 @@ void Solitaire::MakeAutoMoves() {
 		UpdateAvailableMoves();
 	}
 }
+
 void Solitaire::MakeMove(int index) {
 	MakeMove(movesAvailable[index]);
 }
+
 void Solitaire::MakeMove(Move move) {
 	movesMade[movesMadeCount++] = move;
 
@@ -933,6 +948,7 @@ void Solitaire::MakeMove(Move move) {
 		piles[move.From].Flip();
 	}
 }
+
 void Solitaire::UndoMove() {
 	Move move = movesMade[--movesMadeCount];
 
@@ -971,6 +987,7 @@ void Solitaire::UndoMove() {
 		piles[move.To].Remove(piles[move.From], move.Count);
 	}
 }
+
 int Solitaire::FoundationMin() {
 	int one = piles[FOUNDATION2D].Size();
 	int two = piles[FOUNDATION4H].Size();
@@ -980,12 +997,15 @@ int Solitaire::FoundationMin() {
 	int blackFoundationMin = one <= two ? one : two;
 	return 2 + (blackFoundationMin <= redFoundationMin ? blackFoundationMin : redFoundationMin);
 }
+
 Move Solitaire::GetMoveAvailable(int index) {
 	return movesAvailable[index];
 }
+
 Move Solitaire::GetMoveMade(int index) {
 	return movesMade[index];
 }
+
 bool Solitaire::LoadSolitaire(string const& cardSet) {
 	int used[52] = {};
 	if (cardSet.size() < 156) { return false; }
@@ -1008,6 +1028,7 @@ bool Solitaire::LoadSolitaire(string const& cardSet) {
 
 	return true;
 }
+
 string Solitaire::GetSolitaire() {
 	stringstream cardSet;
 	for (int i = 0; i < 52; i++) {
@@ -1027,6 +1048,7 @@ string Solitaire::GetSolitaire() {
 	}
 	return cardSet.str();
 }
+
 bool Solitaire::LoadPysol(string const& cardSet) {
 	int used[52] = {};
 	if (cardSet.size() < 211) { return false; }
@@ -1066,6 +1088,7 @@ bool Solitaire::LoadPysol(string const& cardSet) {
 	}
 	return true;
 }
+
 string Solitaire::GetPysol() {
 	stringstream cardSet;
 	cardSet << "Talon: ";
@@ -1091,9 +1114,11 @@ string Solitaire::GetPysol() {
 	}
 	return cardSet.str();
 }
+
 void Solitaire::SetDrawCount(int drawCount) {
 	this->drawCount = drawCount;
 }
+
 HashKey Solitaire::GameState() {
 	int order[7] = { TABLEAU1, TABLEAU2, TABLEAU3, TABLEAU4, TABLEAU5, TABLEAU6, TABLEAU7 };
 	int current = 1;
@@ -1152,6 +1177,7 @@ HashKey Solitaire::GameState() {
 
 	return key;
 }
+
 string Solitaire::GetMoveInfo(Move move) {
 	stringstream ss;
 	int stockSize = piles[STOCK].Size();
@@ -1208,6 +1234,7 @@ string Solitaire::GetMoveInfo(Move move) {
 	}
 	return ss.str();
 }
+
 string Solitaire::GameDiagram() {
 	stringstream ss;
 	for (int i = 0; i < 13; i++) {
@@ -1235,6 +1262,7 @@ string Solitaire::GameDiagram() {
 	ss << "Minimum Moves Needed: " << MinimumMovesLeft();
 	return ss.str();
 }
+
 string Solitaire::GameDiagramPysol() {
 	stringstream ss;
 	ss << "Foundations: H-" << RANKS[piles[FOUNDATION4H].Size()] << " C-" << RANKS[piles[FOUNDATION1C].Size()] << " D-" << RANKS[piles[FOUNDATION2D].Size()] << " S-" << RANKS[piles[FOUNDATION3S].Size()];
@@ -1281,6 +1309,7 @@ string Solitaire::GameDiagramPysol() {
 
 	return ss.str();
 }
+
 void AddMove(stringstream & ss, Move m, int stockSize, int wasteSize, int drawCount, bool combine) {
 	if (m.Extra > 0) {
 		if (m.From != WASTE) {
@@ -1320,6 +1349,7 @@ void AddMove(stringstream & ss, Move m, int stockSize, int wasteSize, int drawCo
 		ss << PILES[m.From] << PILES[m.To] << ' ';
 	}
 }
+
 string Solitaire::MovesAvailable() {
 	//Returns moves available for the current state. Flip moves are combined with the move that caused it in []. See below for move representation.
 	stringstream ss;
@@ -1329,6 +1359,7 @@ string Solitaire::MovesAvailable() {
 	}
 	return ss.str();
 }
+
 string Solitaire::MovesMade() {
 	//Returns moves made so far in the current game.
 	//DR# is a draw move that is done # number of times. ie) DR2 means draw twice, if draw count > 1 it is still DR2.
@@ -1348,9 +1379,11 @@ string Solitaire::MovesMade() {
 	}
 	return ss.str();
 }
+
 int Solitaire::MovesAvailableCount() {
 	return movesAvailableCount;
 }
+
 int Solitaire::MovesMadeNormalizedCount() {
 	int movesTotal = 0;
 	int stockSize = 24;
@@ -1387,18 +1420,23 @@ int Solitaire::MovesMadeNormalizedCount() {
 	// cout << "normalized: " << movesTotal << endl;
 	return movesTotal;
 }
+
 int Solitaire::MovesMadeCount() {
 	return movesMadeCount;
 }
+
 int Solitaire::FoundationCount() {
 	return foundationCount;
 }
+
 int Solitaire::RoundCount() {
 	return roundCount;
 }
+
 int Solitaire::DrawCount() {
 	return drawCount;
 }
+
 int Solitaire::MovesAdded(Move const& move) {
 	int movesAdded = 1;
 	int wasteSize = piles[WASTE].Size();
@@ -1424,6 +1462,7 @@ int Solitaire::MovesAdded(Move const& move) {
 	}
 	return movesAdded;
 }
+
 Move Solitaire::operator[](int index) {
 	return movesMade[index];
 }

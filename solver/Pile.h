@@ -1,6 +1,7 @@
 #ifndef Pile_h
 #define Pile_h
-#include"Card.h"
+
+#include "Card.h"
 
 enum Piles {
 	WASTE = 0,
@@ -19,9 +20,11 @@ enum Piles {
 };
 
 class Pile {
+
 private:
 	Card down[24], up[24];
 	int size, downSize, upSize;
+
 public:
 	void AddDown(Card card);
 	void AddUp(Card card);
@@ -41,4 +44,5 @@ public:
 	Card Low();
 	Card High();
 };
+
 #endif
