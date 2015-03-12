@@ -37,6 +37,10 @@ void Random::SetSeed(int seed) {
 	}
 }
 
+int Random::GetSeed() {
+	return seed;
+}
+
 int Random::Next1() {
 	CalculateNext();
 	return value & 0x7fffffff;

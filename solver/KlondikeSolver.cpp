@@ -78,6 +78,10 @@ int main(int argc, char * argv[]) {
 		} else if (strcasecmp(argv[i], "-fast") == 0 || strcasecmp(argv[i], "/fast") == 0 || strcasecmp(argv[i], "-f") == 0 || strcasecmp(argv[i], "/f") == 0) {
 			fastMode = true;
 			if (maxClosedCount == 0) { maxClosedCount = 200000; }
+		} else if (strcasecmp(argv[i], "-stat") == 0 || strcasecmp(argv[i], "/stat") == 0 || strcasecmp(argv[i], "-st") == 0 || strcasecmp(argv[i], "/st") == 0) {
+			if (i + 1 >= argc) { cout << "You must specify a file location."; return 0; }
+			s.EnableStatistics(argv[i + 1]);
+			i++;
 		} else if (strcasecmp(argv[i], "-m") == 0 || strcasecmp(argv[i], "/m") == 0 || strcasecmp(argv[i], "-multi") == 0 || strcasecmp(argv[i], "/multi") == 0) {
 			if (i + 1 >= argc) { cout << "You must specify number of threads."; return 0; }
 			multiThreaded = atoi(argv[i + 1]);
@@ -104,13 +108,14 @@ int main(int argc, char * argv[]) {
 			cout << "  /STATES # [/S #]      Sets the maximum number of game states to evaluate\n";
 			cout << "                        before terminating. Defaults to 5,000,000.\n\n";
 			cout << "  /FAST [/F]            Run the solver in a best attempt mode, which is\n";
-			cout << "                        faster, but not guaranteed to give minimal solution.\n";
+			cout << "                        faster, but not guaranteed to give minimal solution.\n\n";
+			cout << "  /STAT str [/ST str]   Output statistics information in a file given by str\n\n";
 			return 0;
 		} else {
 			if (commandLoaded) { cout << "Only one method can be specified (deck/game/file)."; return 0; }
 			commandLoaded = true;
 			ifstream file(argv[i], ios::in | ios::binary);
-			if (!file) { cout << "You must specify a valid and accessible file."; return 0; }
+			if (!file) { cout << "You must specify a valid and accessible file.\n"; return 0; }
 			file.seekg(0, ios::end);
 			fileContents.resize((unsigned int)file.tellg());
 			file.seekg(0, ios::beg);
@@ -173,17 +178,31 @@ int main(int argc, char * argv[]) {
 
 		bool canReplay = false;
 		if (result == SolvedMinimal) {
-			cout << "Minimal solution in " << s.MovesMadeNormalizedCount() << " moves.";
+			int moves = s.MovesMadeNormalizedCount();
+			cout << "Minimal solution in " << moves << " moves.";
+			s.SaveStatistics("success", 1);
+			s.SaveStatistics("moves", moves);
 			canReplay = true;
 		} else if (result == SolvedMayNotBeMinimal) {
-			cout << "Solved in " << s.MovesMadeNormalizedCount() << " moves.";
+			int moves = s.MovesMadeNormalizedCount();
+			cout << "Solved in " << moves << " moves.";
+			s.SaveStatistics("success", 1);
+			s.SaveStatistics("moves", moves);
 			canReplay = true;
 		} else if (result == Impossible) {
-			cout << "Impossible. Max cards in foundation " << s.FoundationCount() << " at " << s.MovesMadeNormalizedCount() << " moves.";
+			int moves = s.MovesMadeNormalizedCount();
+			cout << "Impossible. Max cards in foundation " << s.FoundationCount() << " at " << moves << " moves.";
+			s.SaveStatistics("success", 0);
+			s.SaveStatistics("moves", moves);
 		} else if (result == CouldNotComplete) {
-			cout << "Unknown. Max cards in foundation " << s.FoundationCount() << " at " << s.MovesMadeNormalizedCount() << " moves.";
+			int moves = s.MovesMadeNormalizedCount();
+			cout << "Unknown. Max cards in foundation " << s.FoundationCount() << " at " << moves << " moves.";
+			s.SaveStatistics("success", 0);
+			s.SaveStatistics("moves", moves);
 		}
-		cout << " Took " << ((clock() - total)/(CLOCKS_PER_SEC / 1000)) << " ms.\n";
+		int duration = (clock() - total) / (CLOCKS_PER_SEC / 1000);
+		cout << " Took " << duration << " ms.\n";
+		s.SaveStatistics("duration", duration);
 
 		if (outputMethod < 2 && replay && canReplay) {
 			int movesToMake = s.MovesMadeCount();
@@ -206,6 +225,12 @@ int main(int argc, char * argv[]) {
 		} else if (showMoves) {
 			cout << "\n";
 		}
+
+		Statistics* statistics = s.GetStatistics();
+		if (statistics) {
+			statistics->Write();
+		}
+
 	} while (fileContents.size() > fileIndex);
 
 	return 0;

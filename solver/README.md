@@ -14,6 +14,7 @@ Klondike (Patience) Solver that finds minimal length solutions.
         /OUT # [/O #] - Sets the output method of the solver. Defaults to 0, 1 for Pysol, 2 for minimal output.
         /STATES # [/S #] - Sets the maximum number of game states to evaluate before terminating. Defaults to 5,000,000.
         /FAST [/F] - Run the solver in a best attempt mode, which is faster, but not guaranteed to give minimal solution or one at all.
+        /STAT str [/ST str] - Output statistics information in a file given by str
 
 #Commands
 

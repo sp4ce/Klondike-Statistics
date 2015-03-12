@@ -13,6 +13,7 @@ public:
 	Random();
 	Random(int seed);
 	void SetSeed(int seed);
+	int GetSeed();
 	int Next1();
 	int Next2();
 };

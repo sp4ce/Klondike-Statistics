@@ -438,6 +438,9 @@ SolveResult Solitaire::SolveMinimalMultithreaded(int numThreads, int maxClosedCo
 }
 
 SolveResult Solitaire::SolveMinimal(int maxClosedCount) {
+	SaveStatistics("deal", random.GetSeed());
+	SaveStatistics("draw", drawCount);
+
 	MakeAutoMoves();
 	if (movesAvailableCount == 0) { return foundationCount == 52 ? SolvedMinimal : Impossible; }
 
@@ -473,7 +476,7 @@ SolveResult Solitaire::SolveMinimal(int maxClosedCount) {
 			// cout << "open[index].size(): " << open[index].size() << endl;
 			index++;
 		}
-		// cout << "index: " << index << endl;
+		//cout << index << endl;
 
 		//End solver if no more states
 		if (index >= 512) { break; }
@@ -504,8 +507,10 @@ SolveResult Solitaire::SolveMinimal(int maxClosedCount) {
 			UpdateAvailableMoves();
 		}
 		movesTotal = MovesMadeNormalizedCount();
+		// cout << "states: " << closed.Size() << endl;
 
 		//Check for best solution to foundations
+		cout << "moves: "<< closed.Size() << "," << bestSolutionMoveCount << "," << maxFoundationCount << endl;
 		if (foundationCount > maxFoundationCount || (foundationCount == maxFoundationCount && bestSolutionMoveCount > movesTotal)) {
 			bestSolutionMoveCount = movesTotal;
 			maxFoundationCount = foundationCount;
@@ -543,6 +548,7 @@ SolveResult Solitaire::SolveMinimal(int maxClosedCount) {
 					totalOpenCount++;
 					openCount++;
 					open[helper].push(node);
+					cout << "helper: "<< closed.Size() << "," << helper << endl;
 				}
 			}
 
@@ -1461,6 +1467,20 @@ int Solitaire::MovesAdded(Move const& move) {
 		}
 	}
 	return movesAdded;
+}
+
+void Solitaire::EnableStatistics(char* path) {
+	statistics = new Statistics(path);
+}
+
+Statistics* Solitaire::GetStatistics() {
+	return statistics;
+}
+
+void Solitaire::SaveStatistics(const char* name, int data) {
+	if (statistics) {
+		statistics->Set(name, data);
+	}
 }
 
 Move Solitaire::operator[](int index) {

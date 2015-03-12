@@ -4,7 +4,7 @@ CPPFLAGS=-g -std=c++11
 LDFLAGS=-g -std=c++11
 LDLIBS=
 
-SRCS=KlondikeSolver.cpp Solitaire.cpp Pile.cpp Card.cpp Move.cpp Random.cpp
+SRCS=KlondikeSolver.cpp Solitaire.cpp Pile.cpp Card.cpp Move.cpp Random.cpp Statistics.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: KlondikeSolver

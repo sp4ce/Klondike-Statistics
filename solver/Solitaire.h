@@ -6,11 +6,12 @@
 #include <memory>
 #include <mutex>
 
-#include "Random.h"
-#include "Move.h"
 #include "Card.h"
-#include "Pile.h"
 #include "HashMap.h"
+#include "Move.h"
+#include "Pile.h"
+#include "Random.h"
+#include "Statistics.h"
 
 using namespace std;
 
@@ -28,6 +29,7 @@ private:
 	Card cards[52];
 	Move movesAvailable[32];
 	Random random;
+	Statistics* statistics;
 	int drawCount, roundCount, foundationCount, movesAvailableCount, movesMadeCount;
 
 	int FoundationMin();
@@ -69,6 +71,9 @@ public:
 	string GameDiagramPysol();
 	string MovesMade();
 	string MovesAvailable();
+	void EnableStatistics(char* path);
+	void SaveStatistics(const char* name, int data);
+	Statistics* GetStatistics();
 	Move operator[](int index);
 };
 
